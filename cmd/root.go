@@ -4,13 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/InkShaStudio/filemark/pkg/mark"
 	"github.com/InkShaStudio/filemark/pkg/storage"
 	"github.com/spf13/cobra"
 )
-
-func init() {
-	storage.CreateTable()
-}
 
 var rootCmd = &cobra.Command{
 	Use:   "filemark",
@@ -19,6 +16,11 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)
 	},
+}
+
+func init() {
+	storage.CreateTable()
+	rootCmd.AddCommand(mark.GetMarkCmd())
 }
 
 func Execute() {

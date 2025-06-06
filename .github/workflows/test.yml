@@ -1,0 +1,34 @@
+name: Test
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Test
+    strategy:
+      matrix:
+        go: [ 1.24.3 ]
+        os: [ ubuntu-latest]
+    runs-on: ${{matrix.os}}
+    steps:
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{matrix.go}}
+        id: go
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Build
+        run: go build -o ./bin/tetrigo -v ./cmd/tetrigo
+
+      - name: Test
+        run: go test -cover -count=1 -race ./...

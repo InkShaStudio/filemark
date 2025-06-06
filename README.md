@@ -10,7 +10,7 @@ User can find file or directory by mark.
 
 ### Base
 
-- [ ] add mark.
+- [x] add mark.
 - [ ] remove mark.
 - [ ] change mark.
 - [ ] alias mark.
