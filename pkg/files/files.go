@@ -3,7 +3,7 @@ package files
 import (
 	"os"
 
-	"github.com/InkShaStudio/filemark/pkg/command"
+	"github.com/InkShaStudio/go-command"
 )
 
 func Register() *command.SCommand {

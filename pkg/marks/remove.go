@@ -3,7 +3,7 @@ package marks
 import (
 	"fmt"
 
-	"github.com/InkShaStudio/filemark/pkg/command"
+	"github.com/InkShaStudio/go-command"
 	"github.com/InkShaStudio/filemark/pkg/storage"
 )
 

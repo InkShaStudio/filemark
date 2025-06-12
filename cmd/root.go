@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/InkShaStudio/filemark/pkg/command"
 	"github.com/InkShaStudio/filemark/pkg/files"
 	"github.com/InkShaStudio/filemark/pkg/marks"
 	"github.com/InkShaStudio/filemark/pkg/storage"
+	"github.com/InkShaStudio/go-command"
 )
 
 func init() {

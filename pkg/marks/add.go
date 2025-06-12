@@ -3,13 +3,13 @@ package marks
 import (
 	"fmt"
 
-	"github.com/InkShaStudio/filemark/pkg/command"
 	"github.com/InkShaStudio/filemark/pkg/storage"
+	"github.com/InkShaStudio/go-command"
 )
 
 func add() *command.SCommand {
 	name := command.NewCommandArg[string]("name").ChangeDescription("mark name")
-	description := command.NewCommandArg[string]("description")
+	description := command.NewCommandArg[string]("description").ChangeDescription("mark description").ChangeValue("")
 	color := command.NewCommandFlag[string]("color").ChangeDescription("mark color").ChangeValue("white")
 	icon := command.NewCommandFlag[string]("icon").ChangeDescription("mark icon").ChangeValue("")
 
