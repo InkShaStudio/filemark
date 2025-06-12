@@ -17,6 +17,10 @@ func RegisterCommand(cmd *SCommand) *cobra.Command {
 		args_count = cobra.RangeArgs(min_args_count, max_args_count)
 	}
 
+	panicParseError := func(cmd string, arg string, v any, getV any) {
+		panic(fmt.Sprintf("parse %s command arg %s error, should is %T, but get %T", cmd, arg, v, getV))
+	}
+
 	command := &cobra.Command{
 		Use:   cmd.Name,
 		Short: cmd.Description,
@@ -24,32 +28,35 @@ func RegisterCommand(cmd *SCommand) *cobra.Command {
 		Args:  args_count,
 		Run: func(cc *cobra.Command, args []string) {
 			for index, arg := range args {
-				switch v := any(cmd.Args[index].Value).(type) {
+				item := cmd.Args[index]
+				name := item.GetName()
+
+				switch v := item.GetValue().(type) {
 				case *string:
 					*v = arg
 				case *bool:
 					if val, err := strconv.ParseBool(arg); err == nil {
 						*v = val
 					} else {
-						panic(fmt.Sprintf("parse %s command arg %s error, should is %T, but get %T", cmd.Name, cmd.Args[index].Name, v, val))
+						panicParseError(cmd.Name, name, v, val)
 					}
 				case *int:
 					if val, err := strconv.ParseInt(arg, 10, 64); err == nil {
 						*v = int(val)
 					} else {
-						panic(fmt.Sprintf("parse %s command arg %s error, should is %T, but get %T", cmd.Name, cmd.Args[index].Name, v, val))
+						panicParseError(cmd.Name, name, v, val)
 					}
 				case *float64:
 					if val, err := strconv.ParseFloat(arg, 64); err == nil {
 						*v = val
 					} else {
-						panic(fmt.Sprintf("parse %s command arg %s error, should is %T, but get %T", cmd.Name, cmd.Args[index].Name, v, val))
+						panicParseError(cmd.Name, name, v, val)
 					}
 				case *float32:
 					if val, err := strconv.ParseFloat(arg, 32); err == nil {
 						*v = float32(val)
 					} else {
-						panic(fmt.Sprintf("parse %s command arg %s error, should is %T, but get %T", cmd.Name, cmd.Args[index].Name, v, val))
+						panicParseError(cmd.Name, name, v, val)
 					}
 				}
 			}
@@ -58,34 +65,41 @@ func RegisterCommand(cmd *SCommand) *cobra.Command {
 	}
 
 	for _, flag := range cmd.Flags {
-		switch v := any(flag.Value).(type) {
+		name := flag.GetName()
+		desc := flag.GetDescription()
+
+		switch v := any(flag.GetValue()).(type) {
 		case *bool:
-			command.Flags().BoolVar(v, flag.Name, *v, flag.Description)
+			command.Flags().BoolVar(v, name, *v, desc)
 		case *[]bool:
-			command.Flags().BoolSliceVar(v, flag.Name, *v, flag.Description)
+			command.Flags().BoolSliceVar(v, name, *v, desc)
 		case *int:
-			command.Flags().IntVar(v, flag.Name, *v, flag.Description)
+			command.Flags().IntVar(v, name, *v, desc)
 		case *[]int:
-			command.Flags().IntSliceVar(v, flag.Name, *v, flag.Description)
+			command.Flags().IntSliceVar(v, name, *v, desc)
 		case *float32:
-			command.Flags().Float32Var(v, flag.Name, *v, flag.Description)
+			command.Flags().Float32Var(v, name, *v, desc)
 		case *[]float32:
-			command.Flags().Float32SliceVar(v, flag.Name, *v, flag.Description)
+			command.Flags().Float32SliceVar(v, name, *v, desc)
 		case *float64:
-			command.Flags().Float64Var(v, flag.Name, *v, flag.Description)
+			command.Flags().Float64Var(v, name, *v, desc)
 		case *[]float64:
-			command.Flags().Float64SliceVar(v, flag.Name, *v, flag.Description)
+			command.Flags().Float64SliceVar(v, name, *v, desc)
 		case *time.Duration:
-			command.Flags().DurationVar(v, flag.Name, *v, flag.Description)
+			command.Flags().DurationVar(v, name, *v, desc)
 		case *[]time.Duration:
-			command.Flags().DurationSliceVar(v, flag.Name, *v, flag.Description)
+			command.Flags().DurationSliceVar(v, name, *v, desc)
 		case *string:
-			command.Flags().StringVar(v, flag.Name, *v, flag.Description)
+			command.Flags().StringVar(v, name, *v, desc)
 		case *[]string:
-			command.Flags().StringSliceVar(v, flag.Name, *v, flag.Description)
+			command.Flags().StringSliceVar(v, name, *v, desc)
 		default:
-			panic(fmt.Sprintf("not support command %s flag %s type: %T", cmd.Name, flag.Name, v))
+			panic(fmt.Sprintf("not support command %s flag %s type: %T", cmd.Name, name, v))
 		}
+	}
+
+	for _, subc := range cmd.SubCommand {
+		command.AddCommand(RegisterCommand(subc))
 	}
 
 	return command

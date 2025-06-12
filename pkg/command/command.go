@@ -5,13 +5,13 @@ import "fmt"
 type CommandHandle = func(cmd *SCommand)
 
 type SCommand struct {
-	Name        string               `json:"name"`
-	Description string               `json:"description"`
-	Summary     string               `json:"summary"`
-	Args        []*SCommandArg[any]  `json:"args"`
-	Flags       []*SCommandFlag[any] `json:"flags"`
-	SubCommand  []*SCommand          `json:"subCommand"`
-	Handle      CommandHandle
+	Name        string              `json:"name"`
+	Description string              `json:"description"`
+	Summary     string              `json:"summary"`
+	Args        []ICommandArgValue  `json:"args"`
+	Flags       []ICommandFlagValue `json:"flags"`
+	SubCommand  []*SCommand         `json:"subCommand"`
+	Handle      CommandHandle       `json:"-"`
 }
 
 type ICommand interface {
@@ -40,15 +40,17 @@ func (cmd *SCommand) ChangeSummary(summary string) *SCommand {
 	return cmd
 }
 
-func (cmd *SCommand) AddArgs(args ...*SCommandArg[any]) *SCommand {
+func (cmd *SCommand) AddArgs(args ...ICommandArgValue) *SCommand {
 	cmd.Args = append(cmd.Args, args...)
 	flag := false
 
 	for i, arg := range cmd.Args {
+		arg.SetIndex(i)
+
 		if flag {
-			panic(fmt.Sprintf("command '%s': empty argument '%s' (index %d) appears after non-empty argument; all optional args must follow required ones", cmd.Name, arg.Name, i))
+			panic(fmt.Sprintf("command '%s': empty argument '%s' (index %d) appears after non-empty argument; all optional args must follow required ones", cmd.Name, arg.GetName(), i))
 		}
-		if arg.Value != "" {
+		if arg.GetValue() == nil {
 			flag = true
 		}
 	}
@@ -56,7 +58,7 @@ func (cmd *SCommand) AddArgs(args ...*SCommandArg[any]) *SCommand {
 	return cmd
 }
 
-func (cmd *SCommand) AddFlags(flags ...*SCommandFlag[any]) *SCommand {
+func (cmd *SCommand) AddFlags(flags ...ICommandFlagValue) *SCommand {
 	cmd.Flags = append(cmd.Flags, flags...)
 
 	return cmd
@@ -71,7 +73,7 @@ func (cmd *SCommand) GetArgsCount(onlyEmpty bool) int {
 	count := 0
 
 	for _, arg := range cmd.Args {
-		if !onlyEmpty && arg.Value != "" {
+		if !onlyEmpty && arg.GetValue() != nil {
 			continue
 		}
 
@@ -91,8 +93,8 @@ func NewCommand(name string) *SCommand {
 		Name:        name,
 		Description: "",
 		Summary:     "",
-		Args:        []*SCommandArg[any]{},
-		Flags:       []*SCommandFlag[any]{},
+		Args:        []ICommandArgValue{},
+		Flags:       []ICommandFlagValue{},
 		SubCommand:  []*SCommand{},
 		Handle:      nil,
 	}

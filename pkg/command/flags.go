@@ -2,7 +2,7 @@ package command
 
 type SCommandFlag[T any] struct {
 	Name        string `json:"name"`
-	Value       *T     `json:"value"`
+	Value       T      `json:"value"`
 	Short       string `json:"short"`
 	Description string `json:"description"`
 }
@@ -14,6 +14,13 @@ type ICommandFlag[T any] interface {
 	ChangeDescription(description string) *SCommandFlag[T]
 }
 
+type ICommandFlagValue interface {
+	GetValue() any
+	GetName() string
+	GetDescription() string
+	GetShort() string
+}
+
 func (flag *SCommandFlag[T]) ChangeName(name string) *SCommandFlag[T] {
 	short := string([]rune(name)[0])
 	flag.Name = name
@@ -21,7 +28,7 @@ func (flag *SCommandFlag[T]) ChangeName(name string) *SCommandFlag[T] {
 	return flag
 }
 
-func (flag *SCommandFlag[T]) ChangeValue(value *T) *SCommandFlag[T] {
+func (flag *SCommandFlag[T]) ChangeValue(value T) *SCommandFlag[T] {
 	flag.Value = value
 	return flag
 }
@@ -36,9 +43,25 @@ func (flag *SCommandFlag[T]) ChangeDescription(description string) *SCommandFlag
 	return flag
 }
 
+func (flag *SCommandFlag[T]) GetValue() any {
+	return &flag.Value
+}
+
+func (flag *SCommandFlag[T]) GetDescription() string {
+	return flag.Description
+}
+
+func (flag *SCommandFlag[T]) GetName() string {
+	return flag.Name
+}
+
+func (flag *SCommandFlag[T]) GetShort() string {
+	return flag.Short
+}
+
 func NewCommandFlag[T any](name string) *SCommandFlag[T] {
 	short := string([]rune(name)[0])
-	var val *T
+	var val T
 
 	return &SCommandFlag[T]{
 		Name:        name,
