@@ -29,7 +29,7 @@ User can find file or directory by mark.
 - [ ] Bulk edit mark.
 - [ ] Bulk add mark to file or dir.
 - [ ] Bulk remove mark.
-- [ ] Mark commit.
+- [ ] Mark comment.
 - [ ] Sort by mark.
 - [ ] Filter by mark.
 - [ ] Search mark.
@@ -46,10 +46,11 @@ User can find file or directory by mark.
 - [ ] Backup marks.
 - [ ] Restore marks.
 - [ ] Trace file/dir.
-- [ ] Generate mark-base directory link.
+- [ ] Generate mark-based virtual directory paths (sortable). e.g. `marks/docs/md/README.md` and `marks/md/docs/README.md` or `marks/md/README.md`.
 - [ ] Random read file/dir by mark.
 - [ ] Build in mark.
 - [ ] Mark level.
+- [ ] More GUI support.
 
 ### Auto
 
