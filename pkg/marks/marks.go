@@ -12,11 +12,11 @@ func Register() *command.SCommand {
 	mark := command.
 		NewCommand("mark").
 		ChangeDescription("list all marks").
-		AddSubCommand(add()).
+		AddSubCommand(add(), remove()).
 		RegisterHandler(func(cmd *command.SCommand) {
 			marks := storage.QueryMarks()
-			for index, mark := range marks {
-				fmt.Printf("[%d] %s\n", index, mark.Mark)
+			for _, mark := range marks {
+				fmt.Printf("[%d] %s\n", mark.Id, mark.Mark)
 			}
 		})
 

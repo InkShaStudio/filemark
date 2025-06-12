@@ -9,8 +9,8 @@ import (
 )
 
 func RegisterCommand(cmd *SCommand) *cobra.Command {
-	min_args_count := cmd.GetArgsCount(true)
-	max_args_count := cmd.GetArgsCount(false)
+	min_args_count := cmd.GetArgsCount(false)
+	max_args_count := cmd.GetArgsCount(true)
 	args_count := cobra.ExactArgs(min_args_count)
 
 	if min_args_count != max_args_count {
@@ -66,33 +66,34 @@ func RegisterCommand(cmd *SCommand) *cobra.Command {
 
 	for _, flag := range cmd.Flags {
 		name := flag.GetName()
+		short := flag.GetShort()
 		desc := flag.GetDescription()
 
 		switch v := any(flag.GetValue()).(type) {
 		case *bool:
-			command.Flags().BoolVar(v, name, *v, desc)
+			command.Flags().BoolVarP(v, name, short, *v, desc)
 		case *[]bool:
-			command.Flags().BoolSliceVar(v, name, *v, desc)
+			command.Flags().BoolSliceVarP(v, name, short, *v, desc)
 		case *int:
-			command.Flags().IntVar(v, name, *v, desc)
+			command.Flags().IntVarP(v, name, short, *v, desc)
 		case *[]int:
-			command.Flags().IntSliceVar(v, name, *v, desc)
+			command.Flags().IntSliceVarP(v, name, short, *v, desc)
 		case *float32:
-			command.Flags().Float32Var(v, name, *v, desc)
+			command.Flags().Float32VarP(v, name, short, *v, desc)
 		case *[]float32:
-			command.Flags().Float32SliceVar(v, name, *v, desc)
+			command.Flags().Float32SliceVarP(v, name, short, *v, desc)
 		case *float64:
-			command.Flags().Float64Var(v, name, *v, desc)
+			command.Flags().Float64VarP(v, name, short, *v, desc)
 		case *[]float64:
-			command.Flags().Float64SliceVar(v, name, *v, desc)
+			command.Flags().Float64SliceVarP(v, name, short, *v, desc)
 		case *time.Duration:
-			command.Flags().DurationVar(v, name, *v, desc)
+			command.Flags().DurationVarP(v, name, short, *v, desc)
 		case *[]time.Duration:
-			command.Flags().DurationSliceVar(v, name, *v, desc)
+			command.Flags().DurationSliceVarP(v, name, short, *v, desc)
 		case *string:
-			command.Flags().StringVar(v, name, *v, desc)
+			command.Flags().StringVarP(v, name, short, *v, desc)
 		case *[]string:
-			command.Flags().StringSliceVar(v, name, *v, desc)
+			command.Flags().StringSliceVarP(v, name, short, *v, desc)
 		default:
 			panic(fmt.Sprintf("not support command %s flag %s type: %T", cmd.Name, name, v))
 		}

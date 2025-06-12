@@ -11,7 +11,7 @@ User can find file or directory by mark.
 ### Base
 
 - [x] add mark.
-- [ ] remove mark.
+- [x] remove mark.
 - [ ] change mark.
 - [ ] alias mark.
 - [ ] list mark.

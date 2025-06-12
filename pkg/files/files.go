@@ -7,7 +7,7 @@ import (
 )
 
 func Register() *command.SCommand {
-	p := command.NewCommandFlag[string]("path")
+	p := command.NewCommandFlag[string]("path").ChangeDescription("work dir path")
 
 	list := command.
 		NewCommand("list").
