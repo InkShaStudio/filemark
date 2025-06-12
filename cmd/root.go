@@ -4,25 +4,29 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/InkShaStudio/filemark/pkg/command"
+	"github.com/InkShaStudio/filemark/pkg/files"
+	"github.com/InkShaStudio/filemark/pkg/marks"
 	"github.com/InkShaStudio/filemark/pkg/storage"
-	"github.com/spf13/cobra"
 )
 
 func init() {
 	storage.CreateTable()
 }
 
-var rootCmd = &cobra.Command{
-	Use:   "filemark",
-	Short: "filemark is a tool",
-	Long:  "Can add tag to file.",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(args)
-	},
-}
-
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
+	cmd := command.RegisterCommand(
+		command.
+			NewCommand("filemark").
+			ChangeDescription("filemark is a tool\ncan add tag to file or dir").
+			RegisterHandler(func(cmd *command.SCommand) {
+			}).
+			AddSubCommand(
+				files.Register(),
+				marks.Register(),
+			),
+	)
+	if err := cmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
