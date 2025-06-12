@@ -1,5 +1,7 @@
 github.com/InkShaStudio/go-command v0.0.1 h1:wUtW7s+PkcoHRPDHLidprMfPuufGi+9THV+XY35bk/U=
 github.com/InkShaStudio/go-command v0.0.1/go.mod h1:4cZnS5aOVTbokaNSQqyP3J3u1h7WQaua376T5TxvrBw=
+github.com/InkShaStudio/go-command v0.0.2 h1:NscM0UFvapuIzDODPwnZ8p++uU23+lqKs7XAmEM278k=
+github.com/InkShaStudio/go-command v0.0.2/go.mod h1:4cZnS5aOVTbokaNSQqyP3J3u1h7WQaua376T5TxvrBw=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1/go.mod h1:uYgXzlJ7ZpABp8OJ+exZzJJhRNQ2ASbcXHWsFqH8hp8=
 github.com/charmbracelet/bubbles v0.21.0 h1:9TdC97SdRVg/1aaXNVWfFH3nnLAwOXr8Fn6u6mfQdFs=

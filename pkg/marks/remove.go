@@ -3,8 +3,8 @@ package marks
 import (
 	"fmt"
 
-	"github.com/InkShaStudio/go-command"
 	"github.com/InkShaStudio/filemark/pkg/storage"
+	"github.com/InkShaStudio/go-command"
 )
 
 func remove() *command.SCommand {
@@ -12,7 +12,7 @@ func remove() *command.SCommand {
 
 	return command.
 		NewCommand("remove").
-		ChangeDescription("remove mark <id>").
+		ChangeDescription("remove mark").
 		AddArgs(id).
 		RegisterHandler(func(cmd *command.SCommand) {
 			if storage.RemoveMark(id.Value) {

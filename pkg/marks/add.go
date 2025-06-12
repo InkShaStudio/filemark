@@ -14,7 +14,7 @@ func add() *command.SCommand {
 	icon := command.NewCommandFlag[string]("icon").ChangeDescription("mark icon").ChangeValue("")
 
 	return command.
-		NewCommand("add <name> [description]").
+		NewCommand("add").
 		ChangeDescription("create mark").
 		AddArgs(name, description).
 		AddFlags(color, icon).

@@ -16,8 +16,6 @@ func Register() *command.SCommand {
 		RegisterHandler(func(cmd *command.SCommand) {
 			file_path := p.Value
 
-			println("p=", file_path)
-
 			if file_path == "" {
 				file_path, _ = os.Getwd()
 			}

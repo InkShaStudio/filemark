@@ -11,7 +11,7 @@ require (
 )
 
 require (
-	github.com/InkShaStudio/go-command v0.0.1 // indirect
+	github.com/InkShaStudio/go-command v0.0.2 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/charmbracelet/colorprofile v0.3.1 // indirect
 	github.com/charmbracelet/x/ansi v0.9.2 // indirect
