@@ -1,4 +1,4 @@
-package cmd
+package marks
 
 import (
 	"fmt"
@@ -7,13 +7,13 @@ import (
 	"github.com/InkShaStudio/filemark/pkg/storage"
 )
 
-func init() {
+func add() *command.SCommand {
 	name := command.NewCommandArg[string]("name").ChangeDescription("mark name")
 	color := command.NewCommandArg[string]("color").ChangeDescription("mark color")
 	description := command.NewCommandArg[string]("description").ChangeDescription("mark description")
 	icon := command.NewCommandArg[string]("icon").ChangeDescription("mark icon")
 
-	add := command.
+	return command.
 		NewCommand("add").
 		ChangeDescription("add mark").
 		AddArgs(name, color, description, icon).
@@ -31,18 +31,4 @@ func init() {
 				fmt.Println("add mark failed")
 			}
 		})
-
-	rootCmd.
-		AddSubCommand(
-			command.
-				NewCommand("mark").
-				ChangeDescription("list all marks").
-				AddSubCommand(add).
-				RegisterHandler(func(cmd *command.SCommand) {
-					marks := storage.QueryMarks()
-					for index, mark := range marks {
-						fmt.Printf("[%d] %s\n", index, mark.Mark)
-					}
-				}),
-		)
 }
