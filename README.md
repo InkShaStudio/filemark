@@ -13,7 +13,7 @@ User can find file or directory by mark.
 - [x] Add mark.
 - [x] Remove mark.
 - [x] List mark.
-- [ ] Rename mark.
+- [x] Rename mark.
 - [ ] Change mark.
 - [ ] Add mark to file or dir.
 - [ ] Remove mark for file or dir.

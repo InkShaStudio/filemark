@@ -23,6 +23,7 @@ const CREATE_MARK_TABLE_SQL = `
 `
 const INSERT_MARK_SQL = `INSERT INTO mark (mark, description, color, icon) VALUES(?,?,?,?);`
 const DELETE_MARK_SQL = `DELETE FROM mark WHERE id = ?;`
+const RENAME_MARK_SQL = `UPDATE MARK SET mark=? WHERE id=?;`
 
 func Connection(dbfile string, callback func(db *sql.DB)) {
 	db, err := sql.Open("sqlite3", dbfile)
@@ -110,6 +111,21 @@ func RemoveMark(id int) bool {
 	Connection(dbfile, func(db *sql.DB) {
 		_, err := db.Exec(DELETE_MARK_SQL, id)
 		if err != nil {
+			fmt.Println("err:\n", err)
+		} else {
+			flag = true
+		}
+	})
+
+	return flag
+}
+
+func RenameMark(id int, name string) bool {
+	flag := false
+	dbfile := GetMarkTable(true)
+
+	Connection(dbfile, func(db *sql.DB) {
+		if _, err := db.Exec(RENAME_MARK_SQL, name, id); err != nil {
 			fmt.Println("err:\n", err)
 		} else {
 			flag = true
