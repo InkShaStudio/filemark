@@ -23,7 +23,9 @@ const CREATE_MARK_TABLE_SQL = `
 `
 const INSERT_MARK_SQL = `INSERT INTO mark (mark, description, color, icon) VALUES(?,?,?,?);`
 const DELETE_MARK_SQL = `DELETE FROM mark WHERE id = ?;`
-const RENAME_MARK_SQL = `UPDATE MARK SET mark=? WHERE id=?;`
+const RENAME_MARK_SQL = `UPDATE mark SET mark=? WHERE id=?;`
+const QUERY_MARK_SQL = `SELECT * FROM mark WHERE id=?;`
+const CHANGE_MARK_SQL = `UPDATE mark SET mark=?, description=?, color=?, icon=? WHERE id=?;`
 
 func Connection(dbfile string, callback func(db *sql.DB)) {
 	db, err := sql.Open("sqlite3", dbfile)
@@ -126,6 +128,46 @@ func RenameMark(id int, name string) bool {
 
 	Connection(dbfile, func(db *sql.DB) {
 		if _, err := db.Exec(RENAME_MARK_SQL, name, id); err != nil {
+			fmt.Println("err:\n", err)
+		} else {
+			flag = true
+		}
+	})
+
+	return flag
+}
+
+func QueryMark(id int) (Mark, error) {
+	dbfile := GetMarkTable(true)
+	var mark Mark
+	var err error = nil
+
+	Connection(dbfile, func(db *sql.DB) {
+		rows, e := db.Query(QUERY_MARK_SQL, id)
+		if e != nil {
+			fmt.Println("err:\n", e)
+			err = e
+			return
+		}
+		defer rows.Close()
+		for rows.Next() {
+			err = rows.Scan(&mark.Id, &mark.Mark, &mark.Description, &mark.Color, &mark.Icon, &mark.Sort, &mark.CreatedAt, &mark.ModifyAt)
+			if err != nil {
+				fmt.Println("err:\n", err)
+			}
+			break
+		}
+	})
+
+	return mark, err
+}
+
+func ChangeMark(id int, mark *Mark) bool {
+	flag := false
+	dbfile := GetMarkTable(true)
+
+	Connection(dbfile, func(db *sql.DB) {
+		if _, err := db.Exec(CHANGE_MARK_SQL, mark.Mark, mark.Description, mark.Color, mark.Icon, id); err != nil {
 			fmt.Println("err:\n", err)
 		} else {
 			flag = true

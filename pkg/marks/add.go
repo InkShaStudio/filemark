@@ -10,7 +10,7 @@ import (
 func add() *command.SCommand {
 	name := command.NewCommandArg[string]("name").ChangeDescription("mark name")
 	description := command.NewCommandArg[string]("description").ChangeDescription("mark description").ChangeValue("")
-	color := command.NewCommandFlag[string]("color").ChangeDescription("mark color").ChangeValue("white")
+	color := command.NewCommandFlag[string]("color").ChangeDescription("mark color").ChangeValue("#FFFFFF")
 	icon := command.NewCommandFlag[string]("icon").ChangeDescription("mark icon").ChangeValue("")
 
 	return command.
