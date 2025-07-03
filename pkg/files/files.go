@@ -20,24 +20,14 @@ func Register() *command.SCommand {
 				file_path, _ = os.Getwd()
 			}
 
-			info, err := os.Stat(file_path)
+			filter := NewFileInfoFilter()
+			list := ReadPath(file_path)
+			ui := NewFileInfoList(filter, &list)
+			ui.CurentPath = file_path
 
-			if err != nil {
-				println("err", err)
-			}
+			println("ready show ui")
 
-			if info.IsDir() {
-				dirs, _ := os.ReadDir(file_path)
-				for _, item := range dirs {
-					prefix := "[F]"
-					if item.IsDir() {
-						prefix = "[D]"
-					}
-					println(prefix, item.Name())
-				}
-			} else {
-				println("[F]", info.Name())
-			}
+			ui.Run()
 		})
 
 	return list

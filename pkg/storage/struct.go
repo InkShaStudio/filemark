@@ -14,3 +14,13 @@ type Mark struct {
 	CreatedAt string
 	ModifyAt  string
 }
+
+type FileMark struct {
+	ID        int
+	Dir       string
+	FilePath  string
+	Marks     []string
+	Sha256    string
+	CreatedAt string
+	ModifyAt  string
+}
