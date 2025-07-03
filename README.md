@@ -14,7 +14,7 @@ User can find file or directory by mark.
 - [x] Remove mark.
 - [x] List mark.
 - [x] Rename mark.
-- [ ] Change mark.
+- [x] Change mark.
 - [ ] Add mark to file or dir.
 - [ ] Remove mark for file or dir.
 - [ ] Find file or directory by mark or keyword.

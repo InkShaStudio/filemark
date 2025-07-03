@@ -2,12 +2,10 @@ package marks
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/InkShaStudio/filemark/pkg/storage"
 	"github.com/InkShaStudio/filemark/pkg/ui"
 	"github.com/InkShaStudio/go-command"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
 
@@ -20,41 +18,63 @@ func Register() *command.SCommand {
 	rename_command := rename()
 	change_command := change()
 
+	sub_commands := []*command.SCommand{
+		add_command,
+		remove_command,
+		rename_command,
+		change_command,
+	}
+
 	mark := command.
 		NewCommand("mark").
 		ChangeDescription("list all marks").
 		AddFlags(details, raw).
-		AddSubCommand(
-			add_command,
-			remove_command,
-			rename_command,
-			change_command,
-		).
+		AddSubCommand(sub_commands...).
 		RegisterHandler(func(cmd *command.SCommand) {
 			marks := storage.QueryMarks()
 			text := ""
+
 			if raw.Value {
 				model := ui.InitialListUI(
 					ui.WrapItem(
-						&marks,
+						ui.WrapItemSlice(&marks),
 						func(item *storage.Mark) string {
 							return fmt.Sprintf("%d", item.Id)
 						},
 						func(item *storage.Mark) string {
 							return item.Mark
 						}),
+					true,
 				)
 
-				if _, err := tea.NewProgram(model).Run(); err != nil {
-					fmt.Println("raw mode error: ", err)
-					os.Exit(1)
-				}
+				model.Run()
 
 				for i, item := range model.Choices {
 					if _, ok := model.Selected[i]; ok {
 						fmt.Println("u select ", item.GetLabel())
 					}
 				}
+
+				operates := ui.InitialListUI(
+					ui.WrapItem(
+						sub_commands,
+						func(item *command.SCommand) string {
+							return item.Name
+						},
+						func(item *command.SCommand) string {
+							return item.Name
+						},
+					),
+					false,
+				)
+
+				operates.Run()
+
+				// for i, item := range operates.Choices {
+				// 	if _, ok := operates.Selected[i]; ok {
+				// 		fmt.Println()
+				// 	}
+				// }
 
 			} else {
 				for _, mark := range marks {
@@ -64,9 +84,17 @@ func Register() *command.SCommand {
 					if mark.Icon != "" {
 						icon = mark.Icon
 					}
+
 					if mark.Color != "" {
-						color = mark.Color
+						if mark.Color[0] != '#' {
+							if new_color, err := ui.TransformColorHex(mark.Color); err == nil {
+								color = new_color
+							}
+						} else {
+							color = mark.Color
+						}
 					}
+
 					fc := lipgloss.NewStyle().Foreground(lipgloss.Color(color))
 
 					text += fc.Render(fmt.Sprintf("%s %03d %s", icon, mark.Id, mark.Mark)) + "\n"
