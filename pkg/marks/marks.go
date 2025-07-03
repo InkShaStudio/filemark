@@ -25,7 +25,7 @@ func Register() *command.SCommand {
 		change_command,
 	}
 
-	mark := command.
+	return command.
 		NewCommand("mark").
 		ChangeDescription("list all marks").
 		AddFlags(details, raw).
@@ -34,75 +34,29 @@ func Register() *command.SCommand {
 			marks := storage.QueryMarks()
 			text := ""
 
-			if raw.Value {
-				model := ui.InitialListUI(
-					ui.WrapItem(
-						ui.WrapItemSlice(&marks),
-						func(item *storage.Mark) string {
-							return fmt.Sprintf("%d", item.Id)
-						},
-						func(item *storage.Mark) string {
-							return item.Mark
-						}),
-					true,
-				)
+			for _, mark := range marks {
+				icon := ui.DEFAULT_MARK_ICON
+				color := ui.DEFAULT_MARK_COLOR
 
-				model.Run()
-
-				for i, item := range model.Choices {
-					if _, ok := model.Selected[i]; ok {
-						fmt.Println("u select ", item.GetLabel())
-					}
+				if mark.Icon != "" {
+					icon = mark.Icon
 				}
 
-				operates := ui.InitialListUI(
-					ui.WrapItem(
-						sub_commands,
-						func(item *command.SCommand) string {
-							return item.Name
-						},
-						func(item *command.SCommand) string {
-							return item.Name
-						},
-					),
-					false,
-				)
-
-				operates.Run()
-
-				// for i, item := range operates.Choices {
-				// 	if _, ok := operates.Selected[i]; ok {
-				// 		fmt.Println()
-				// 	}
-				// }
-
-			} else {
-				for _, mark := range marks {
-					icon := ""
-					color := "#16F0AE"
-
-					if mark.Icon != "" {
-						icon = mark.Icon
-					}
-
-					if mark.Color != "" {
-						if mark.Color[0] != '#' {
-							if new_color, err := ui.TransformColorHex(mark.Color); err == nil {
-								color = new_color
-							}
-						} else {
-							color = mark.Color
+				if mark.Color != "" {
+					if mark.Color[0] != '#' {
+						if new_color, err := ui.TransformColorHex(mark.Color); err == nil {
+							color = new_color
 						}
+					} else {
+						color = mark.Color
 					}
-
-					fc := lipgloss.NewStyle().Foreground(lipgloss.Color(color))
-
-					text += fc.Render(fmt.Sprintf("%s %03d %s", icon, mark.Id, mark.Mark)) + "\n"
 				}
+
+				fc := lipgloss.NewStyle().Foreground(lipgloss.Color(color))
+
+				text += fc.Render(fmt.Sprintf("%s %03d %s", icon, mark.Id, mark.Mark)) + "\n"
 			}
 
 			fmt.Println(text)
 		})
-
-	return mark
 }

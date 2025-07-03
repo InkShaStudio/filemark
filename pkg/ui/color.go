@@ -17,7 +17,7 @@ func TransformColorRGBA(name string) (color.RGBA, error) {
 
 func TransformColorHex(name string) (string, error) {
 	if c, ok := colornames.Map[name]; ok {
-		return fmt.Sprintf("#%02x%02x%02x", c.R, c.G, c.B), nil
+		return fmt.Sprintf("#%02X%02X%02X%02X", c.R, c.G, c.B, c.A), nil
 	}
 
 	return "", fmt.Errorf("color %s not found", name)
