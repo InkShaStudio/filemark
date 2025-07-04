@@ -1,5 +1,7 @@
 package storage
 
+import "time"
+
 type CreateMark struct {
 	Mark        string
 	Description string
@@ -16,11 +18,12 @@ type Mark struct {
 }
 
 type FileMark struct {
-	ID        int
-	Dir       string
-	FilePath  string
-	Marks     []string
-	Sha256    string
-	CreatedAt string
-	ModifyAt  string
+	ID         int
+	Dir        string
+	FilePath   string
+	Marks      []string
+	Sha256     string
+	LastModify time.Time
+	CreatedAt  time.Time
+	ModifyAt   time.Time
 }

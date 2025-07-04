@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/InkShaStudio/filemark/pkg/storage"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -99,6 +100,10 @@ func ReadPath(p string) []FileInfo {
 		list = append(list, NewFileInfo(p))
 	}
 
+	for _, item := range list {
+		storage.InsertFile(item.Path)
+	}
+
 	return list
 }
 
@@ -156,30 +161,36 @@ func (f *FileInfoList) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (f *FileInfoList) View() string {
 	view := "\n"
+	files := *f.Files
+	fc := lipgloss.NewStyle().Foreground(lipgloss.Color(SELECT_COLOR))
 
-	for i, item := range *f.Files {
-		if f.Filter.Filter(&item) {
-			continue
-		}
+	if f.Selected != -1 {
+		view += fmt.Sprintf("\n%s", files[f.Cursor].Path)
 
-		cursor := " "
+	} else {
+		for i, item := range files {
+			if f.Filter.Filter(&item) {
+				continue
+			}
 
-		if f.Cursor == i {
-			cursor = ">"
-		}
+			cursor := " "
 
-		name := item.Name
-		if item.Type == FileTypeDir {
-			name += "/"
-		}
+			if f.Cursor == i {
+				cursor = ">"
+			}
 
-		line := fmt.Sprintf("\n%s %s", cursor, name)
+			name := item.Name
+			if item.Type == FileTypeDir {
+				name += "/"
+			}
 
-		if f.Selected == i {
-			fc := lipgloss.NewStyle().Foreground(lipgloss.Color(SELECT_COLOR))
-			view += fc.Render(line)
-		} else {
-			view += line
+			line := fmt.Sprintf("\n%s %s", cursor, name)
+
+			if f.Selected == i {
+				view += fc.Render(line)
+			} else {
+				view += line
+			}
 		}
 	}
 

@@ -24,9 +24,6 @@ func Register() *command.SCommand {
 			list := ReadPath(file_path)
 			ui := NewFileInfoList(filter, &list)
 			ui.CurentPath = file_path
-
-			println("ready show ui")
-
 			ui.Run()
 		})
 
